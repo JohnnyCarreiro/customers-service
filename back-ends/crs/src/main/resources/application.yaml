@@ -1,0 +1,46 @@
+server:
+  servlet:
+    context-path: /api/v1
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+  undertow:
+    threads:
+      worker: 64
+      io: 4
+
+spring:
+  datasource:
+    url: jdbc:sqlserver://${mssql.host};encrypt=true;trustServerCertificate=true;databaseName=${mssql.database}
+    password: ${mssql.password}
+    username: ${mssql.username}
+    hikari:
+      auto-commit: false
+      connection-timeout: 250
+      max-lifetime: 600000
+      maximum-pool-size: 20
+      minimum-idle: 10
+      pool-name: master
+  jpa:
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServerDialect
+        generate_statistics: false
+        connection:
+          provider_disables_autocommit: false
+        format_sql: true
+  flyway:
+    url: jdbc:sqlserver://${env.MSSQL_HOST:localhost:1433};encrypt=true;trustServerCertificate=true;databaseName=${env.MSSQL_DATABASE:REGSYS}
+    user: ${env.MSSQL_USERNAME:customer_admin}
+    password: ${env.MSSQL_PASSWORD:Password123}
+    clean-disabled: false
+    baselineOnMigrate: true
+    validateOnMigrate: false
