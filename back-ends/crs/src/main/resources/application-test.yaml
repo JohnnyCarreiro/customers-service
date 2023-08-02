@@ -1,0 +1,23 @@
+server:
+  undertow:
+    threads:
+      worker: 20
+      io: 2
+mssql:
+  host: ${MSSQL_HOST:localhost:1433}
+  database: ${MSSQL_DATABASE:REGSYS}
+  username: ${MSSQL_USERNAME:customer_admin}
+  password: ${MSSQL_PASSWORD:Password123}
+spring:
+  datasource:
+    hikari:
+      auto-commit: false
+      connection-timeout: 250
+      max-lifetime: 600000
+      maximum-pool-size: 10
+      minimum-idle: 5
+      pool-name: master
+  jpa:
+    open-in-view: false
+    show-sql: true
+    defer-datasource-initialization: true

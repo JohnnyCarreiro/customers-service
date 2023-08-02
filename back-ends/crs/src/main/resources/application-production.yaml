@@ -1,0 +1,9 @@
+mssql:
+  host: ${MSSQL_HOST:localhost:1433}
+  database: ${MSSQL_DATABASE:REGSYS}
+  username: ${MSSQL_USERNAME:customer_admin}
+  password: ${MSSQL_PASSWORD:Password123}
+spring:
+  jpa:
+    open-in-view: false
+    show-sql: false

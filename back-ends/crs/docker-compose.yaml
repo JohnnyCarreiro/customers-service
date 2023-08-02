@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  crs-mssql:
+    profiles: ["crs-mssql"]
+    image: crs/mssql_docker
+    container_name: crs-mssql
+    build: ./.docker/db
+    volumes:
+      - ./.docker/datasource:/var/opt/mssql
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: Password123!
+      MSSQL_DB: regis_sys
+      MSSQL_SCHEMA: customers
+      MSSQL_USER: customers_admin
+      MSSQL_PASSWORD: Password123
+      MSSQL_PID: Express
+    ports:
+      - "1433:1433"
+
+  crs-mssql-test:
+    profiles: ["crs-mssql-test"]
+    image: crs/mssql_docker
+    container_name: crs-mssql-test
+    build: ./.docker/db
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: Password123!
+      MSSQL_DB: REGSYS
+      MSSQL_SCHEMA: customer
+      MSSQL_USER: customer_admin
+      MSSQL_PASSWORD: Password123
+      MSSQL_PID: Express
+    ports:
+      - "1433:1433"
