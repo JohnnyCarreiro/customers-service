@@ -103,9 +103,9 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>9.21.1</version>
                 <configuration>
-                    <url>jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true;databaseName=REGSYS</url>
-                    <user>customer_admin</user>
-                    <password>Password123</password>
+                    <url>jdbc:sqlserver://${env.MSSQL_HOST};encrypt=true;trustServerCertificate=true;databaseName=${env.MSSQL_DATABASE}</url>
+                    <user>${env.MSSQL_USERNAME}</user>
+                    <password>${env.MSSQL_PASSWORD}</password>
                     <cleanDisabled>false</cleanDisabled>
                 </configuration>
                 <dependencies>
