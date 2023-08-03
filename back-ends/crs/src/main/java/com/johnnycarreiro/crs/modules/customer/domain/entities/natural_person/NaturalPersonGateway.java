@@ -10,16 +10,11 @@ import java.util.Optional;
 
 public interface NaturalPersonGateway {
   NaturalPerson create(NaturalPerson aNaturalPerson);
-
   NaturalPerson create(NaturalPerson aNaturalPerson, List<Address> addresses);
-
   void deleteById(String anId);
-
-  Optional<NaturalPerson> findById(EntityId anId);
-
-  NaturalPerson update(NaturalPerson aNaturalPerson);
-
+  Optional<NaturalPerson> findById(EntityId anId); // /natural_persons/{id}
+  Optional<NaturalPerson> findCustomerByIdWithContact(EntityId anId); //TODO: Implement /natural_persons/{id}/contact
+  NaturalPerson update(NaturalPerson aNaturalPerson); //TODO: Implement updateContact and updateAddress
   Pagination<NaturalPerson> findAll(SearchQuery aQuery);
-
   List<String> existsByIds(Iterable<String> ids);
 }

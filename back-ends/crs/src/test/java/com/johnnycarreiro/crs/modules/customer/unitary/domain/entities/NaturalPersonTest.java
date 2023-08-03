@@ -1,5 +1,6 @@
 package com.johnnycarreiro.crs.modules.customer.unitary.domain.entities;
 
+import com.johnnycarreiro.crs.core.domain.EntityId;
 import com.johnnycarreiro.crs.core.domain.exceptions.DomainException;
 import com.johnnycarreiro.crs.core.domain.validation.StackValidationHandler;
 import com.johnnycarreiro.crs.core.domain.validation.ThrowsValidationHandler;
@@ -167,7 +168,7 @@ public class NaturalPersonTest {
           anUnitType,
           sut.getId().getValue());
 
-    final var aContact = Contact.create(sut.getId(), null, null, aAddress);
+    final var aContact = Contact.create(null, null, aAddress, sut.getId());
 
     sut.addContact(aContact);
 
@@ -201,7 +202,7 @@ public class NaturalPersonTest {
         null,
         null
       );
-    final var aContact = Contact.create(actualNaturalPerson.getId(), null, null, aAddress);
+    final var aContact = Contact.create(null, null, aAddress, actualNaturalPerson.getId());
     actualNaturalPerson.addContact(aContact);
 
     var sut = StackValidationHandler.create();
