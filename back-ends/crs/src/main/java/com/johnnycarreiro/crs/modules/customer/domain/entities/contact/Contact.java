@@ -148,6 +148,12 @@ public class Contact extends Entity<EntityId> {
     new ContactValidator(this, aHandler).validate();
   }
 
+  public Contact delete() {
+    this.setDeletedAt(Instant.now());
+    this.setUpdatedAt(Instant.now());
+    return this;
+  }
+
   public EntityId getCustomerId() {
     return customerId;
   }

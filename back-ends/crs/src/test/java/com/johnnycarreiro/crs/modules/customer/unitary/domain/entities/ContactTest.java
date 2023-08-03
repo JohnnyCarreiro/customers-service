@@ -48,7 +48,7 @@ public class ContactTest {
     final var anState = "SP";
     final var anUnitType = "Residential";
 
-    final var aAddress = Address
+    final var anAddress = Address
       .create(
         aStreet,
         aNumber,
@@ -61,11 +61,10 @@ public class ContactTest {
         aCustomerId)
       ;
 
-    final var sut = Contact.create(aPhoneNumber, anEmail, EntityId.from(aCustomerId));
+    final var sut = Contact.create(aPhoneNumber, anEmail, anAddress, EntityId.from(aCustomerId));
 
     Assertions.assertFalse(sut.getAddresses().isEmpty());
     Assertions.assertEquals(expectedAddressesLength, sut.getAddresses().size());
-
   }
 
   @Test
@@ -163,5 +162,39 @@ public class ContactTest {
 
     Assertions.assertEquals(expectedErrorCount, sut.getErrors().size());
     Assertions.assertEquals(expectedErrorMessage, sut.getErrors().get(0).message());
+  }
+
+  @Test
+  @DisplayName("Delete Contacte - Set Deletion Date")
+  public void whenCallsDelete_thenItShouldSetADeletionDate() {
+    final var aCustomerId = "2d3220a0-1ed3-481b-852e-9def51fbf640";
+    final var aPhoneNumber = "(12) 9.9720-4431";
+    final var anEmail = "john.doe@acme.digital";
+
+    final var aStreet = "Logradouro";
+    final var aNumber = 100;
+    final var anArea = "Bairro";
+    final var aCity = "Mogi Guaçu";
+    final var expectedCep = "00100-000";
+    final var anState = "SP";
+    final var anUnitType = "Residential";
+
+    final var anAddress = Address
+      .create(
+        aStreet,
+        aNumber,
+        null,
+        anArea,
+        aCity,
+        anState,
+        expectedCep,
+        anUnitType,
+        aCustomerId
+      );
+
+    final var sut = Contact.create(aPhoneNumber, anEmail, anAddress, EntityId.from(aCustomerId));
+    sut.delete();
+
+    Assertions.assertNotNull(sut.getDeletedAt());
   }
 }
