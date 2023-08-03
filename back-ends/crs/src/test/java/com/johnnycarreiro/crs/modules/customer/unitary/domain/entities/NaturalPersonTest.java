@@ -3,6 +3,7 @@ package com.johnnycarreiro.crs.modules.customer.unitary.domain.entities;
 import com.johnnycarreiro.crs.core.domain.exceptions.DomainException;
 import com.johnnycarreiro.crs.core.domain.validation.StackValidationHandler;
 import com.johnnycarreiro.crs.core.domain.validation.ThrowsValidationHandler;
+import com.johnnycarreiro.crs.modules.customer.domain.entities.contact.Contact;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.natural_person.NaturalPerson;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.address.Address;
 import org.junit.jupiter.api.Assertions;
@@ -114,7 +115,7 @@ public class NaturalPersonTest {
     final var actualNaturalPerson = NaturalPerson.create(expectedName, cpf);
 
     final var sut = Assertions.assertThrows(
-        DomainException.class, () -> actualNaturalPerson.validate(new ThrowsValidationHandler())
+        DomainException.class, () -> actualNaturalPerson.getCpf().validate(new ThrowsValidationHandler())
     );
     Assertions.assertEquals(expectedErrorCount, sut.getErrors().size());
     Assertions.assertEquals(expectedErrorMessage, sut.getErrors().get(0).message());
@@ -131,6 +132,7 @@ public class NaturalPersonTest {
     var sut = StackValidationHandler.create();
 
     actualNaturalPerson.validate(sut);
+    actualNaturalPerson.getCpf().validate(sut);
 
     Assertions.assertEquals(expectedErrorCount, sut.getErrors().size());
     Assertions.assertEquals(expectedErrorMessage, sut.getErrors().get(0).message());
@@ -144,7 +146,6 @@ public class NaturalPersonTest {
     final var name = "John Doe";
     final var cpf = "935.411.347-80";
 
-    final var aCustomerId = "cc4eb100-7b02-482f-96ed-c48241648b5d";
     final var aStreet = "Logradouro";
     final var aNumber = 100;
     final var anArea = "Bairro";
@@ -153,17 +154,30 @@ public class NaturalPersonTest {
     final var anState = "SP";
     final var anUnitType = "Residential";
 
-    final var newAddress = Address
-        .create(aStreet, aNumber, null, anArea, aCity,  anState, expectedCep, anUnitType, aCustomerId);
-
     final var sut = NaturalPerson.create(name, cpf);
-    sut.addAddress(newAddress);
+
+    final var aAddress = Address
+        .create(aStreet,
+          aNumber,
+          null,
+          anArea,
+          aCity,
+          anState,
+          expectedCep,
+          anUnitType,
+          sut.getId().getValue());
+
+    final var aContact = Contact.create(sut.getId(), null, null, aAddress);
+
+    sut.addContact(aContact);
 
     sut.validate(new ThrowsValidationHandler());
 
     Assertions.assertNotNull(sut);
-    Assertions.assertNotNull(newAddress);
-    Assertions.assertEquals(expectedAddressNumber, sut.getAddresses().size());
+    Assertions.assertNotNull(sut.getContact().getAddresses());
+    Assertions.assertFalse(sut.getContact().getAddresses().isEmpty());
+    Assertions.assertNotNull(sut.getContact());
+    Assertions.assertEquals(expectedAddressNumber, sut.getContact().getAddresses().size());
   }
 
   @Test
@@ -173,14 +187,25 @@ public class NaturalPersonTest {
 
     final var name = "John Doe";
     final var cpf = "935.411.347-80";
-    final var newAddress = Address
-        .create(null, null, null, null, null, null, null,  null, null);
 
-    final var currentNaturalPerson = NaturalPerson.create(name, cpf);
-    currentNaturalPerson.addAddress(newAddress);
+    final var actualNaturalPerson = NaturalPerson.create(name, cpf);
+    final var aAddress = Address
+      .create(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      );
+    final var aContact = Contact.create(actualNaturalPerson.getId(), null, null, aAddress);
+    actualNaturalPerson.addContact(aContact);
 
     var sut = StackValidationHandler.create();
-    currentNaturalPerson.validate(sut);
+    actualNaturalPerson.getContact().getAddresses().forEach(address -> address.validate(sut));
 
     Assertions.assertEquals(expectedAddressNumber, sut.getErrors().size());
   }
@@ -195,6 +220,7 @@ public class NaturalPersonTest {
     final var cpf = "935.411.347-80";
 
     final var sut = NaturalPerson.create(name, cpf);
+//    final var aContact = Contact.create();
     Assertions.assertDoesNotThrow( () -> sut.validate(new ThrowsValidationHandler()));
 
     final var createdAt = sut.getCreatedAt();

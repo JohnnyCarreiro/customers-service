@@ -4,11 +4,11 @@ import com.johnnycarreiro.crs.core.domain.AggregateRoot;
 import com.johnnycarreiro.crs.core.domain.EntityId;
 import com.johnnycarreiro.crs.core.domain.validation.ValidationHandler;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.address.Address;
+import com.johnnycarreiro.crs.modules.customer.domain.entities.contact.Contact;
 import com.johnnycarreiro.crs.modules.customer.domain.value_objects.Cpf;
 import lombok.Getter;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,18 +16,19 @@ import java.util.Objects;
 public class NaturalPerson extends AggregateRoot<EntityId> {
   private String name;
   private Cpf cpf;
-  private List<Address> addresses = new ArrayList<>();
-
-  private NaturalPerson(final String name, final String cpf) {
+  private Contact contact;
+  private NaturalPerson(final String name, final String cpf, final Contact contact) {
     super(EntityId.create(), Instant.now(), Instant.now(), null);
     this.name = name;
     this.cpf = Cpf.create(cpf);
+    this.contact = contact;
   }
 
   private NaturalPerson(
       final String id,
       final String name,
       final String cpf,
+      final Contact contact,
       final Instant createdAt,
       final Instant updatedAt,
       final Instant deletedAt
@@ -35,17 +36,35 @@ public class NaturalPerson extends AggregateRoot<EntityId> {
     super(EntityId.from(id), createdAt, updatedAt, deletedAt);
     this.name = name;
     this.cpf = Cpf.create(cpf);
+    this.contact = contact;
+  }
+  private NaturalPerson(
+    final String id,
+    final String name,
+    final String cpf,
+    final Instant createdAt,
+    final Instant updatedAt,
+    final Instant deletedAt
+  ) {
+    super(EntityId.from(id), createdAt, updatedAt, deletedAt);
+    this.name = name;
+    this.cpf = Cpf.create(cpf);
+    this.contact = null;
   }
 
   private NaturalPerson(NaturalPerson aPerson) {
     super(aPerson.getId(), aPerson.getCreatedAt(), aPerson.getUpdatedAt(), aPerson.getDeletedAt());
     this.name = aPerson.getName();
     this.cpf = aPerson.getCpf();
-    this.addresses = aPerson.getAddresses();
+    this.contact = aPerson.getContact();
   }
 
   public static NaturalPerson create(final String name, final String cpf) {
-    return new NaturalPerson(name, cpf);
+    return new NaturalPerson(name, cpf, null);
+  }
+
+  public static NaturalPerson create(final String name, final String cpf, final Contact contact) {
+    return new NaturalPerson(name, cpf, contact);
   }
 
   public static NaturalPerson with(
@@ -58,18 +77,24 @@ public class NaturalPerson extends AggregateRoot<EntityId> {
   ) {
     return new NaturalPerson(anId, aName, aCpf, aCreationDate, anUpdateDate, aDeletionDate);
   }
+  public static NaturalPerson with(
+    final String anId,
+    final String aName,
+    final String aCpf,
+    final Contact contact,
+    final Instant aCreationDate,
+    final Instant anUpdateDate,
+    final Instant aDeletionDate
+  ) {
+    return new NaturalPerson(anId, aName, aCpf, contact, aCreationDate, anUpdateDate, aDeletionDate);
+  }
 
   public static NaturalPerson with(NaturalPerson aPerson) {
     return new NaturalPerson(aPerson);
   }
 
-  public void addAddress(List<Address> addresses) {
-    this.addresses.addAll(addresses);
-  }
-
-  public void addAddress(Address anAddress) {
-    this.addresses.add(anAddress);
-    setUpdatedAt(Instant.now());
+  public void addContact(Contact aContact) {
+    this.contact = aContact;
   }
 
   public NaturalPerson update(String name, String cpf) {
@@ -94,8 +119,6 @@ public class NaturalPerson extends AggregateRoot<EntityId> {
   @Override
   public void validate(final ValidationHandler aHandler) {
     new NaturalPersonValidator(this, aHandler).validate();
-    this.cpf.validate(aHandler);
-    for (Address address : this.addresses) address.validate(aHandler);
   }
 
   @Override
@@ -118,7 +141,7 @@ public class NaturalPerson extends AggregateRoot<EntityId> {
         super.toString() +
         ", name='" + name + '\'' +
         ", cpf=" + cpf.toString() +
-        ", address=" + addresses +
+        ", contact=" + contact.toString() +
         '}';
   }
 }
