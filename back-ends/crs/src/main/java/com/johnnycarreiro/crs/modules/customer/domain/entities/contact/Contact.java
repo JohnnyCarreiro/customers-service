@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class Contact extends Entity<EntityId> {
-  private EntityId customerId;
   private String phoneNumber;
   private String email;
   private List<Address> addresses;
+  private EntityId customerId;
 
   private Contact(
-    final EntityId customerId,
     final String phoneNumber,
-    final String email
+    final String email,
+    final EntityId customerId
   ) {
     super(EntityId.create(), Instant.now(), Instant.now(), null);
     this.customerId = customerId;
@@ -28,10 +28,10 @@ public class Contact extends Entity<EntityId> {
     this.addresses = new ArrayList<>();
   }
   private Contact(
-    final EntityId customerId,
     final String phoneNumber,
     final String email,
-    final List<Address> addresses
+    final List<Address> addresses,
+    final EntityId customerId
   ) {
     super(EntityId.create(), Instant.now(), Instant.now(), null);
     this.customerId = customerId;
@@ -41,10 +41,10 @@ public class Contact extends Entity<EntityId> {
   }
   private Contact(
     final EntityId id,
-    final EntityId customerId,
     final String phoneNumber,
     final String email,
     final List<Address> addresses,
+    final EntityId customerId,
     final Instant createAt,
     final Instant updatedAt,
     final Instant deletedAt
@@ -57,61 +57,61 @@ public class Contact extends Entity<EntityId> {
   }
 
   public static Contact create(
-    final EntityId aCustomerId,
     final String aPhoneNumber,
     final String anEmail,
-    final List<Address> anAddresses
+    final List<Address> anAddresses,
+    final EntityId aCustomerId
   ) {
     return new Contact(
-      aCustomerId,
       aPhoneNumber,
       anEmail,
-      anAddresses
+      anAddresses,
+      aCustomerId
     );
   }
 
   public static Contact create(
-    final EntityId aCustomerId,
     final String aPhoneNumber,
     final String anEmail,
-    final Address anAddress
+    final Address anAddress,
+    final EntityId aCustomerId
   ) {
     return new Contact(
-      aCustomerId,
       aPhoneNumber,
       anEmail,
-      List.of(anAddress)
+      List.of(anAddress),
+      aCustomerId
     );
   }
 
   public static Contact create(
-    final EntityId aCustomerId,
     final String aPhoneNumber,
-    final String anEmail
+    final String anEmail,
+    final EntityId aCustomerId
   ) {
     return new Contact(
-      aCustomerId,
       aPhoneNumber,
-      anEmail
+      anEmail,
+      aCustomerId
     );
   }
 
   public static Contact with(
     final EntityId anId,
-    final EntityId aCustomerId,
     final String aPhoneNumber,
     final String anEmail,
     final List<Address> anAddresses,
+    final EntityId aCustomerId,
     final Instant aCreationDate,
     final Instant anUpdateDate,
     final Instant aDeletionDate
   ) {
     return new Contact(
       anId,
-      aCustomerId,
       aPhoneNumber,
       anEmail,
       anAddresses,
+      aCustomerId,
       aCreationDate,
       anUpdateDate,
       aDeletionDate
@@ -119,15 +119,15 @@ public class Contact extends Entity<EntityId> {
   }
 
   public Contact update(
-    final EntityId aCustomerId,
     final String aPhoneNumber,
     final String anEmail,
-    final List<Address> anAddresses
+    final List<Address> anAddresses,
+    final EntityId aCustomerId
   ) {
-    this.customerId = aCustomerId;
     this.phoneNumber = aPhoneNumber.replaceAll("[\\D.]", "");
     this.email = anEmail;
     this.addresses= anAddresses;
+    this.customerId = aCustomerId;
     this.setUpdatedAt(Instant.now());
     return this;
   }

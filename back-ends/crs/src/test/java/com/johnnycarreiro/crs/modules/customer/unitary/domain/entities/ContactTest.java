@@ -21,7 +21,7 @@ public class ContactTest {
 
     final var phoneNumber = "(12) 9.9720-4431";
 
-    final var sut = Contact.create(EntityId.from(expectedCustomerId), phoneNumber, expectedEmail);
+    final var sut = Contact.create(phoneNumber, expectedEmail, EntityId.from(expectedCustomerId));
 
     Assertions.assertNotNull(sut.getId());
     Assertions.assertEquals(expectedCustomerId, sut.getCustomerId().getValue());
@@ -61,7 +61,7 @@ public class ContactTest {
         aCustomerId)
       ;
 
-    final var sut = Contact.create(EntityId.from(aCustomerId), aPhoneNumber, anEmail, aAddress);
+    final var sut = Contact.create(aPhoneNumber, anEmail, EntityId.from(aCustomerId));
 
     Assertions.assertFalse(sut.getAddresses().isEmpty());
     Assertions.assertEquals(expectedAddressesLength, sut.getAddresses().size());
@@ -73,12 +73,12 @@ public class ContactTest {
   public void givenInvalidEmail_whenCallsValidate_thenShouldThrowDomainException() {
     final var expectedErrorCount = 1;
     final var expectedErrorMessage = "Invalid Email Address";
-    final var aCustomerID = "2d3220a0-1ed3-481b-852e-9def51fbf640";
+    final var aCustomerId = "2d3220a0-1ed3-481b-852e-9def51fbf640";
     final var anEmail = "john.doe@acme";
 
     final var aPhoneNumber = "(12) 9.9720-4431";
 
-    final var currentContact = Contact.create(EntityId.from(aCustomerID), aPhoneNumber, anEmail);
+    final var currentContact = Contact.create(aPhoneNumber, anEmail, EntityId.from(aCustomerId));
 
     final var sut = Assertions.assertThrows(
       DomainException.class, () -> currentContact.validate(new ThrowsValidationHandler())
@@ -93,12 +93,12 @@ public class ContactTest {
   public void givenInvalidEmailNull_whenCallsValidate_thenShouldThrowDomainException() {
     final var expectedErrorCount = 1;
     final var expectedErrorMessage = "`Email` shouldn't be Null";
-    final var aCustomerID = "2d3220a0-1ed3-481b-852e-9def51fbf640";
+    final var aCustomerId = "2d3220a0-1ed3-481b-852e-9def51fbf640";
     final String anEmail = null;
 
     final var aPhoneNumber = "(12) 9.9720-4431";
 
-    final var currentContact = Contact.create(EntityId.from(aCustomerID), aPhoneNumber, anEmail);
+    final var currentContact = Contact.create(aPhoneNumber, anEmail, EntityId.from(aCustomerId));
 
     final var sut = Assertions.assertThrows(
       DomainException.class, () -> currentContact.validate(new ThrowsValidationHandler())
@@ -113,11 +113,11 @@ public class ContactTest {
   public void givenInvalidNullPhoneNumber_whenCallsValidate_thenShouldThrowDomainException() {
     final var expectedErrorCount = 1;
     final var expectedErrorMessage = "`Phone Number` shouldn't be Null";
-    final var aCustomerID = "2d3220a0-1ed3-481b-852e-9def51fbf640";
+    final var aCustomerId = "2d3220a0-1ed3-481b-852e-9def51fbf640";
     final var anEmail = "john.doe@acme.digital";
     final String aPhoneNumber = null;
 
-    final var currentContact = Contact.create(EntityId.from(aCustomerID), aPhoneNumber, anEmail);
+    final var currentContact = Contact.create(aPhoneNumber, anEmail, EntityId.from(aCustomerId));
 
     final var sut = Assertions.assertThrows(
       DomainException.class, () -> currentContact.validate(new ThrowsValidationHandler())
@@ -132,11 +132,11 @@ public class ContactTest {
   public void givenInvalidPhoneNumberLengthLessThan10Chars_whenCallsValidate_thenShouldThrowDomainException() {
     final var expectedErrorCount = 1;
     final var expectedErrorMessage = "`Phone Number` must have at least 10 and less than 11 characters";
-    final var aCustomerID = "2d3220a0-1ed3-481b-852e-9def51fbf640";
+    final var aCustomerId = "2d3220a0-1ed3-481b-852e-9def51fbf640";
     final var anEmail = "john.doe@acme.digital";
     final var aPhoneNumber = "(12) 9.9720-44";
 
-    final var currentContact = Contact.create(EntityId.from(aCustomerID), aPhoneNumber, anEmail);
+    final var currentContact = Contact.create(aPhoneNumber, anEmail, EntityId.from(aCustomerId));
 
     final var sut = Assertions.assertThrows(
       DomainException.class, () -> currentContact.validate(new ThrowsValidationHandler())
@@ -151,11 +151,11 @@ public class ContactTest {
   public void givenInvalidPhoneNumberLengthGraterThan11Chars_whenCallsValidate_thenShouldThrowDomainException() {
     final var expectedErrorCount = 1;
     final var expectedErrorMessage = "`Phone Number` must have at least 10 and less than 11 characters";
-    final var aCustomerID = "2d3220a0-1ed3-481b-852e-9def51fbf640";
+    final var aCustomerId = "2d3220a0-1ed3-481b-852e-9def51fbf640";
     final var anEmail = "john.doe@acme.digital";
     final var aPhoneNumber = "(12) 9.9720-44311";
 
-    final var currentContact = Contact.create(EntityId.from(aCustomerID), aPhoneNumber, anEmail);
+    final var currentContact = Contact.create(aPhoneNumber, anEmail, EntityId.from(aCustomerId));
 
     final var sut = Assertions.assertThrows(
       DomainException.class, () -> currentContact.validate(new ThrowsValidationHandler())

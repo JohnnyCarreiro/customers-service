@@ -41,7 +41,7 @@ public class DefaultCreateNaturalPersonUseCase extends CreateNaturalPersonUseCas
       ).toList();
 
     final var aContact =
-      Contact.create(newNaturalPerson.getId(), aContactCmd.phoneNumber(), aContactCmd.email(), anAddresses);
+      Contact.create(aContactCmd.phoneNumber(), aContactCmd.email(), anAddresses, newNaturalPerson.getId());
 
     newNaturalPerson.addContact(aContact);
 
