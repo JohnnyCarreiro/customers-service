@@ -13,7 +13,7 @@ public interface AddressGateway {
 
   Optional<Address> findById(EntityId anId);
 
-  void update(Address anAddress);
+  Address update(Address anAddress);
 
   Pagination<Address> findAll(SearchQuery aQuery);
 
