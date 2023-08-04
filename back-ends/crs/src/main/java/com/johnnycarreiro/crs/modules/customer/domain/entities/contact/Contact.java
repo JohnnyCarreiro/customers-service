@@ -9,6 +9,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Contact extends Entity<EntityId> {
   private String phoneNumber;
@@ -118,6 +120,27 @@ public class Contact extends Entity<EntityId> {
     );
   }
 
+  public static Contact with(
+    final EntityId anId,
+    final String aPhoneNumber,
+    final String anEmail,
+    final EntityId aCustomerId,
+    final Instant aCreationDate,
+    final Instant anUpdateDate,
+    final Instant aDeletionDate
+  ) {
+    return new Contact(
+      anId,
+      aPhoneNumber,
+      anEmail,
+      List.of(),
+      aCustomerId,
+      aCreationDate,
+      anUpdateDate,
+      aDeletionDate
+    );
+  }
+
   public Contact update(
     final String aPhoneNumber,
     final String anEmail,
@@ -127,6 +150,24 @@ public class Contact extends Entity<EntityId> {
     this.phoneNumber = aPhoneNumber.replaceAll("[\\D.]", "");
     this.email = anEmail;
     this.addresses= anAddresses;
+    this.customerId = aCustomerId;
+    this.setUpdatedAt(Instant.now());
+    return this;
+  }
+
+  public Contact update(
+    final String aPhoneNumber,
+    final String anEmail,
+    final Address anAddress,
+    final EntityId aCustomerId
+  ) {
+    List<Address> updatedAddresses = this.addresses.stream().map(adr ->
+      adr.getId().equals(anAddress.getId()) ? anAddress : adr
+    ).toList();
+
+    this.phoneNumber = aPhoneNumber.replaceAll("[\\D.]", "");
+    this.email = anEmail;
+    this.addresses = updatedAddresses;
     this.customerId = aCustomerId;
     this.setUpdatedAt(Instant.now());
     return this;

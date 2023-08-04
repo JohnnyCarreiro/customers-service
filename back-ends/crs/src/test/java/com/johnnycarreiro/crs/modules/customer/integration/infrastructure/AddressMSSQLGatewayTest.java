@@ -3,8 +3,6 @@ package com.johnnycarreiro.crs.modules.customer.integration.infrastructure;
 import com.johnnycarreiro.crs.core.domain.validation.ThrowsValidationHandler;
 import com.johnnycarreiro.crs.modules.customer.MSSQLGatewayTest;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.address.Address;
-import com.johnnycarreiro.crs.modules.customer.domain.entities.address.State;
-import com.johnnycarreiro.crs.modules.customer.domain.entities.address.UnitType;
 import com.johnnycarreiro.crs.modules.customer.domain.pagination.Pagination;
 import com.johnnycarreiro.crs.modules.customer.domain.pagination.SearchQuery;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.address.AddressMSSQLGateway;
