@@ -1,5 +1,7 @@
 package com.johnnycarreiro.crs.modules.customer.application.address;
 
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.CreateAddressAPIRequest;
+
 public record CreateAddressCommand(
   String street,
   Integer number,
@@ -21,5 +23,16 @@ public record CreateAddressCommand(
     final String anUnitType
   ) {
     return new CreateAddressCommand(aStreet, aNumber, aComplement, anArea, aCity, aState, aCep, anUnitType);
+  }
+
+  public static CreateAddressCommand with(CreateAddressAPIRequest addr) {
+    return new CreateAddressCommand(addr.street(),
+      addr.number(),
+      addr.complement(),
+      addr.area(),
+      addr.city(),
+      addr.state(),
+      addr.cep(),
+      addr.unitType());
   }
 }
