@@ -1,14 +1,11 @@
 package com.johnnycarreiro.crs.modules.customer.integration.infrastructure;
 
 import com.johnnycarreiro.crs.core.domain.EntityId;
-import com.johnnycarreiro.crs.core.domain.validation.ThrowsValidationHandler;
 import com.johnnycarreiro.crs.modules.customer.MSSQLGatewayTest;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.address.Address;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.contact.Contact;
-import com.johnnycarreiro.crs.modules.customer.domain.entities.contact.ContactGateway;
 import com.johnnycarreiro.crs.modules.customer.domain.pagination.Pagination;
 import com.johnnycarreiro.crs.modules.customer.domain.pagination.SearchQuery;
-import com.johnnycarreiro.crs.modules.customer.infrastructure.address.AddressMSSQLGateway;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.address.percistence.AddressJpaEntity;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.address.percistence.AddressRepository;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.contact.ContactMSSQLGateway;
@@ -21,8 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @MSSQLGatewayTest()
 @DisplayName("Address Gateway Tests Suite")
