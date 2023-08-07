@@ -3,11 +3,14 @@ package com.johnnycarreiro.crs.modules.customer.infrastructure.api.controllers;
 import com.johnnycarreiro.crs.core.domain.validation.ValidationHandler;
 import com.johnnycarreiro.crs.modules.customer.application.address.CreateAddressCommand;
 import com.johnnycarreiro.crs.modules.customer.application.contact.CreateContactCommand;
+import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.api.NaturalPersonAPI;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.CreateNaturalPersonAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.create.CreateNaturalPersonCommand;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.create.CreateNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.domain.pagination.Pagination;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.NaturalPersonAPIResponse;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.presenters.NaturalPersonPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,9 +23,14 @@ import java.util.function.Function;
 public class NaturalPersonController implements NaturalPersonAPI {
 
   private final CreateNaturalPersonUseCase createNaturalPersonUseCase;
+  private final GetNaturalPersonUseCase getNaturalPersonUseCase;
 
-  public NaturalPersonController(final CreateNaturalPersonUseCase useCase) {
+  public NaturalPersonController(
+    final CreateNaturalPersonUseCase useCase,
+    final GetNaturalPersonUseCase getNaturalPersonUseCase
+  ) {
     this.createNaturalPersonUseCase = Objects.requireNonNull(useCase);
+    this.getNaturalPersonUseCase = Objects.requireNonNull(getNaturalPersonUseCase);
   }
 
   @Override
@@ -53,5 +61,13 @@ public class NaturalPersonController implements NaturalPersonAPI {
   @Override
   public Pagination<?> listNaturalPerson(String search, Integer page, Integer perPage, String sort, String direction) {
     return null;
+  }
+
+  @Override
+  public NaturalPersonAPIResponse getById(final String id) {
+    return NaturalPersonPresenter.present.apply(this.getNaturalPersonUseCase.execute(id));
+//    return NaturalPersonPresenter.present
+//      .compose(this.getNaturalPersonUseCase::execute)
+//      .apply(id);
   }
 }

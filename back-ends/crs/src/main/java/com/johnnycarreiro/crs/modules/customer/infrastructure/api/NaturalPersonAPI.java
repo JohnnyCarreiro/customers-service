@@ -2,6 +2,7 @@ package com.johnnycarreiro.crs.modules.customer.infrastructure.api;
 
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.CreateNaturalPersonAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.domain.pagination.Pagination;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.NaturalPersonAPIResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,4 +23,10 @@ public interface NaturalPersonAPI {
       @RequestParam(name = "sort", required = false, defaultValue = "name") final String sort,
       @RequestParam(name = "dir", required = false, defaultValue = "asc") final String direction
   );
+
+  @GetMapping(
+    value = "{id}",
+    produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  NaturalPersonAPIResponse getById(@PathVariable(name = "id") final String id);
 }

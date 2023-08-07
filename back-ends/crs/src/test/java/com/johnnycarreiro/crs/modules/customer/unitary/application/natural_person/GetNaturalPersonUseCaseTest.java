@@ -1,5 +1,8 @@
 package com.johnnycarreiro.crs.modules.customer.unitary.application.natural_person;
 
+import com.johnnycarreiro.crs.core.domain.EntityId;
+import com.johnnycarreiro.crs.core.domain.exceptions.DomainException;
+import com.johnnycarreiro.crs.core.domain.exceptions.NotFoundException;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.DefaultGetNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonOutput;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.natural_person.NaturalPerson;
@@ -45,5 +48,21 @@ public class GetNaturalPersonUseCaseTest {
     Assertions.assertEquals(expectedId, sut.id());
     Assertions.assertEquals(expectedCreateAt, sut.createdAt());
     Assertions.assertEquals(expectedUpdatedAt, sut.updatedAt());
+  }
+
+  @Test
+  @DisplayName("Get Invalid Id - Returns Not Found Exc.")
+  public void givenInvalidId_whenCallGetNaturalPerson_thenItShouldReturnsNotFound() {
+    final var expectedMessage = "NaturalPerson with ID a7b128d7-fa53-4e23-ac70-cff8fd7f9a60 was not found";
+    final var expectedId = EntityId.from("a7b128d7-fa53-4e23-ac70-cff8fd7f9a60");
+
+    final NaturalPersonGateway personGateway = Mockito.mock(NaturalPersonGateway.class);
+    final var useCase = new DefaultGetNaturalPersonUseCase(personGateway);
+
+    final var sut = Assertions.assertThrows(NotFoundException.class, () ->
+      useCase.execute(expectedId.getValue())
+    );
+
+    Assertions.assertEquals(expectedMessage, sut.getMessage());
   }
 }
