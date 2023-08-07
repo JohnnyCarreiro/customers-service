@@ -5,8 +5,8 @@ IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Natur
       CREATE TABLE NaturalPersonContact (
         ContactId UNIQUEIDENTIFIER NOT NULL,
         CustomerId UNIQUEIDENTIFIER NOT NULL,
-        CONSTRAINT FK_NaturalPersonContact_ContactId FOREIGN KEY (ContactId) REFERENCES Contact(Id),
-        CONSTRAINT FK_NaturalPersonContact_CustomerId FOREIGN KEY (CustomerID) REFERENCES NaturalPerson(Id),
+        CONSTRAINT FK_NaturalPersonContact_ContactId FOREIGN KEY (ContactId) REFERENCES Contact(Id) ON DELETE CASCADE ON UPDATE CASCADE,
+        CONSTRAINT FK_NaturalPersonContact_CustomerId FOREIGN KEY (CustomerID) REFERENCES NaturalPerson(Id) ON DELETE CASCADE ON UPDATE CASCADE,
         CONSTRAINT PK_NaturalPersonContact PRIMARY KEY (ContactId, CustomerID)
      );
       CREATE INDEX IX_Contact_Id ON dbo.NaturalPersonContact(ContactId)
