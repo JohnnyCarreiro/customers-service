@@ -1,21 +1,14 @@
 package com.johnnycarreiro.crs.modules.customer.integration.application.natural_person;
 
-import com.johnnycarreiro.crs.core.domain.validation.StackValidationHandler;
 import com.johnnycarreiro.crs.core.domain.validation.ValidationHandler;
 import com.johnnycarreiro.crs.modules.customer.IntegrationTest;
-import com.johnnycarreiro.crs.modules.customer.application.address.CreateAddressCommand;
 import com.johnnycarreiro.crs.modules.customer.application.address.UpdateAddressCommand;
-import com.johnnycarreiro.crs.modules.customer.application.contact.CreateContactCommand;
 import com.johnnycarreiro.crs.modules.customer.application.contact.UpdateContactCommand;
-import com.johnnycarreiro.crs.modules.customer.application.natural_person.create.CreateNaturalPersonCommand;
-import com.johnnycarreiro.crs.modules.customer.application.natural_person.create.CreateNaturalPersonUseCase;
-import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.DefaultUpdateNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNatualPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonCommand;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.address.Address;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.contact.Contact;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.natural_person.NaturalPerson;
-import com.johnnycarreiro.crs.modules.customer.domain.entities.natural_person.NaturalPersonGateway;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.address.percistence.AddressJpaEntity;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.address.percistence.AddressRepository;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.contact.percistence.ContactJpaEntity;
@@ -26,17 +19,7 @@ import io.vavr.control.Either;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
 
 @IntegrationTest
 public class UpdateNaturalPersonUseCaseIT {
@@ -113,7 +96,7 @@ public class UpdateNaturalPersonUseCaseIT {
   }
 
   @Test()
-  @DisplayName("Invalid name Command - Update new Natural Person")
+  @DisplayName("Invalid name Command - Throws a DomainException")
   public void givenInvalidNameInCommand_whenCallExecute_thenThrowsADomainException() {
     final var expectedErrorCount = 1;
     final var expectedErrorMessage = "`Name` shouldn't be null";
