@@ -5,7 +5,7 @@ import com.johnnycarreiro.crs.modules.customer.application.address.CreateAddress
 import com.johnnycarreiro.crs.modules.customer.application.contact.CreateContactCommand;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.api.NaturalPersonAPI;
-import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.CreateNaturalPersonAPIRequest;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateNaturalPersonAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.create.CreateNaturalPersonCommand;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.create.CreateNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.domain.pagination.Pagination;

@@ -1,6 +1,6 @@
 package com.johnnycarreiro.crs.modules.customer.infrastructure.api;
 
-import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.CreateNaturalPersonAPIRequest;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateNaturalPersonAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.domain.pagination.Pagination;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.NaturalPersonAPIResponse;
 import org.springframework.http.MediaType;

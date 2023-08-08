@@ -1,6 +1,6 @@
 package com.johnnycarreiro.crs.modules.customer.application.address;
 
-import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.CreateAddressAPIRequest;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateAddressAPIRequest;
 
 public record CreateAddressCommand(
   String street,

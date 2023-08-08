@@ -1,4 +1,4 @@
-package com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models;
+package com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

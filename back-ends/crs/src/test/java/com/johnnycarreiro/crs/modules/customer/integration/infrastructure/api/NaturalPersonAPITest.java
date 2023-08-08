@@ -13,9 +13,9 @@ import com.johnnycarreiro.crs.modules.customer.domain.entities.address.Address;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.contact.Contact;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.natural_person.NaturalPerson;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.api.NaturalPersonAPI;
-import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.CreateAddressAPIRequest;
-import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.CreateContactAPIRequest;
-import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.CreateNaturalPersonAPIRequest;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateAddressAPIRequest;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateContactAPIRequest;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateNaturalPersonAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.create.CreateNaturalPersonUseCase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -252,8 +252,9 @@ public class NaturalPersonAPITest {
 }
 /*
  * TODO: Rotes for:
- * [] List;
- * [] Delete;
- * [x] Get by Id;
- * [] Update;
+ *  [x] Crate;
+ *  [x] Get By Id;
+ *  [] Update;
+ *  [] Delete;
+ *  [] List;
  * */
