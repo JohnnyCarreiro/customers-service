@@ -4,7 +4,7 @@ import com.johnnycarreiro.crs.core.domain.validation.ValidationHandler;
 import com.johnnycarreiro.crs.modules.customer.IntegrationTest;
 import com.johnnycarreiro.crs.modules.customer.application.address.UpdateAddressCommand;
 import com.johnnycarreiro.crs.modules.customer.application.contact.UpdateContactCommand;
-import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNatualPersonUseCase;
+import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonCommand;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.address.Address;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.contact.Contact;
@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UpdateNaturalPersonUseCaseIT {
 
   @Autowired
-  private UpdateNatualPersonUseCase useCase;
+  private UpdateNaturalPersonUseCase useCase;
 
   @Autowired
   private NaturalPersonRepository personRepository;

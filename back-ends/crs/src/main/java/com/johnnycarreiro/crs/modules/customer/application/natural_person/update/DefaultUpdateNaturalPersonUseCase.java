@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 import static io.vavr.API.Left;
 import static io.vavr.API.Try;
 
-public class DefaultUpdateNaturalPersonUseCase extends UpdateNatualPersonUseCase {
+public class DefaultUpdateNaturalPersonUseCase extends UpdateNaturalPersonUseCase {
 
   private final NaturalPersonGateway naturalPersonGateway;
 

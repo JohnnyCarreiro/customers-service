@@ -9,6 +9,7 @@ import com.johnnycarreiro.crs.core.domain.validation.StackValidationHandler;
 import com.johnnycarreiro.crs.modules.customer.ControllerTest;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonOutput;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonUseCase;
+import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.address.Address;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.contact.Contact;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.natural_person.NaturalPerson;
@@ -17,6 +18,9 @@ import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.mod
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateContactAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateNaturalPersonAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.create.CreateNaturalPersonUseCase;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.update.UpdateAddressAPIRequest;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.update.UpdateContactAPIRequest;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.update.UpdateNaturalPersonAPIRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -27,13 +31,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static io.vavr.API.Left;
 import static io.vavr.API.Right;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -48,6 +52,9 @@ public class NaturalPersonAPITest {
 
   @MockBean
   private GetNaturalPersonUseCase getNaturalPersonUseCase;
+
+  @MockBean
+  private UpdateNaturalPersonUseCase updateNaturalPersonUseCase;
 
   @Autowired
   private MockMvc mvc;
@@ -222,6 +229,40 @@ public class NaturalPersonAPITest {
       .andExpect(jsonPath("$.message", equalTo(expectedMessage)));
   }
 
+  @Test()
+  @DisplayName("Valid Command - Update new Natural Person")
+  public void givenValidCommand_whenCallExecute_thenUpdateANewNaturalPerson() throws Exception {
+    final var expectedId = "a7b128d7-fa53-4e23-ac70-cff8fd7f9a60";
+    final var expectedName = "John Doe";
+    final var expectedCpf = "935.411.347-80";
+
+    final var anInput =
+      getUpdateNaturalPersonAPIRequest(expectedName, expectedCpf);
+
+    when(updateNaturalPersonUseCase.execute(any()))
+      .thenReturn(Right(null));
+
+    final var aRequest = put("/natural_persons/{id}", expectedId)
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(mapper.writeValueAsString(anInput));
+
+    this.mvc.perform(aRequest)
+      .andDo(print())
+      .andExpectAll(
+        status().isNoContent()
+      );
+
+    verify(updateNaturalPersonUseCase, times(1))
+      .execute(argThat(cmd ->
+        Objects.equals(expectedName, cmd.name())
+        && Objects.equals(expectedCpf, cmd.cpf())
+        && Objects.nonNull(cmd.contact())
+        && Objects.equals(1, cmd.contact().addresses().size())
+      ));
+    //TODO: Verify Contact and Addresses
+  }
+
   private static CreateNaturalPersonAPIRequest getCreateNaturalPersonAPIRequest(String expectedName, String expectedCpf) {
     final var aStreet = "Logradouro 1";
     final var aNumber = 100;
@@ -249,12 +290,43 @@ public class NaturalPersonAPITest {
 	  return new CreateNaturalPersonAPIRequest(expectedName, expectedCpf, contactAPIRequest);
   }
 
+  private static UpdateNaturalPersonAPIRequest getUpdateNaturalPersonAPIRequest(String expectedName, String expectedCpf) {
+    final var customerId = UUID.randomUUID().toString();
+    final var aStreet = "Logradouro 1";
+    final var aNumber = 100;
+    final String aComplement = null;
+    final var anArea = "Bairro 1";
+    final var aCity = "Mogi Guaçu 1";
+    final var aCep = "00100-000";
+    final var anState = "SP";
+    final var anUnitType = "Residential";
+    final var addressRequest = new UpdateAddressAPIRequest(
+      UUID.randomUUID().toString(),
+      aStreet,
+      aNumber,
+      aComplement,
+      anArea,
+      aCity,
+      anState,
+      aCep,
+      anUnitType,
+      customerId
+    );
+    final var aPhoneNumber = "(12) 99720-4431";
+    final var anEmail = "john.doe@acme.com";
+    List<UpdateAddressAPIRequest> addressesReq = List.of(addressRequest);
+    final var contactAPIRequest = new UpdateContactAPIRequest(UUID.randomUUID().toString(), aPhoneNumber, anEmail, addressesReq, customerId);
+
+    return new UpdateNaturalPersonAPIRequest(expectedName, expectedCpf, contactAPIRequest);
+  }
+
 }
 /*
  * TODO: Rotes for:
  *  [x] Crate;
  *  [x] Get By Id;
- *  [] Update;
+ *  [x] Update;
+ *  [] Update - ex;
  *  [] Delete;
  *  [] List;
  * */

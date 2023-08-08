@@ -3,6 +3,7 @@ package com.johnnycarreiro.crs.modules.customer.infrastructure.api;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateNaturalPersonAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.domain.pagination.Pagination;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.NaturalPersonAPIResponse;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.update.UpdateNaturalPersonAPIRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,4 +30,13 @@ public interface NaturalPersonAPI {
     produces = MediaType.APPLICATION_JSON_VALUE
   )
   NaturalPersonAPIResponse getById(@PathVariable(name = "id") final String id);
+
+  @PutMapping(
+    value = "{id}",
+    consumes = MediaType.APPLICATION_JSON_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  ResponseEntity<?> updateById(
+    @PathVariable(name = "id") final String id,
+    @RequestBody final UpdateNaturalPersonAPIRequest anInput);
 }

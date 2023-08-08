@@ -4,6 +4,6 @@ import com.johnnycarreiro.crs.core.application.UseCase;
 import com.johnnycarreiro.crs.core.domain.validation.ValidationHandler;
 import io.vavr.control.Either;
 
-public abstract class UpdateNatualPersonUseCase
+public abstract class UpdateNaturalPersonUseCase
     extends UseCase<UpdateNaturalPersonCommand, Either<ValidationHandler, Void>> {
 }

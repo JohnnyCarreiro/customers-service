@@ -4,7 +4,7 @@ import com.johnnycarreiro.crs.core.domain.validation.ValidationHandler;
 import com.johnnycarreiro.crs.modules.customer.application.address.UpdateAddressCommand;
 import com.johnnycarreiro.crs.modules.customer.application.contact.UpdateContactCommand;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.DefaultUpdateNaturalPersonUseCase;
-import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNatualPersonUseCase;
+import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonCommand;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.natural_person.NaturalPerson;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.natural_person.NaturalPersonGateway;
@@ -79,7 +79,7 @@ public class UpdateNaturalPersonUseCaseTest {
     Mockito.when(personGateway.update(any()))
         .thenAnswer(returnsFirstArg());
 
-    final UpdateNatualPersonUseCase useCase = new DefaultUpdateNaturalPersonUseCase(personGateway);
+    final UpdateNaturalPersonUseCase useCase = new DefaultUpdateNaturalPersonUseCase(personGateway);
     Either<ValidationHandler, Void> sut = useCase.execute(aCommand);
 
     Mockito.verify(personGateway, times(1)).findById(eq(expectedId));
@@ -150,7 +150,7 @@ public class UpdateNaturalPersonUseCaseTest {
     Mockito.when(personGateway.findById(eq(aPersonId)))
         .thenReturn(Optional.of(NaturalPerson.with(actualPerson)));
 
-    final UpdateNatualPersonUseCase useCase = new DefaultUpdateNaturalPersonUseCase(personGateway);
+    final UpdateNaturalPersonUseCase useCase = new DefaultUpdateNaturalPersonUseCase(personGateway);
     ValidationHandler sut = useCase.execute(aCommand).getLeft();
 
     Mockito.verify(personGateway, times(1)).findById(eq(aPersonId));

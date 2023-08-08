@@ -9,7 +9,7 @@ import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrie
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.list.DefaultListNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.list.ListNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.DefaultUpdateNaturalPersonUseCase;
-import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNatualPersonUseCase;
+import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.natural_person.NaturalPersonGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,7 @@ public class NaturalPersonUseCaseConfig {
   }
 
   @Bean
-  public UpdateNatualPersonUseCase updateNaturalPersonUseCase() {
+  public UpdateNaturalPersonUseCase updateNaturalPersonUseCase() {
     return new DefaultUpdateNaturalPersonUseCase(personGateway);
   }
 

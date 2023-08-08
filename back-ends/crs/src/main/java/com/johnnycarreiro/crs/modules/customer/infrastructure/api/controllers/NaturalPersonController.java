@@ -2,14 +2,22 @@ package com.johnnycarreiro.crs.modules.customer.infrastructure.api.controllers;
 
 import com.johnnycarreiro.crs.core.domain.validation.ValidationHandler;
 import com.johnnycarreiro.crs.modules.customer.application.address.CreateAddressCommand;
+import com.johnnycarreiro.crs.modules.customer.application.address.UpdateAddressCommand;
 import com.johnnycarreiro.crs.modules.customer.application.contact.CreateContactCommand;
+import com.johnnycarreiro.crs.modules.customer.application.contact.UpdateContactCommand;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonUseCase;
+import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonCommand;
+import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.api.NaturalPersonAPI;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateContactAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateNaturalPersonAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.create.CreateNaturalPersonCommand;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.create.CreateNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.domain.pagination.Pagination;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.NaturalPersonAPIResponse;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.update.UpdateAddressAPIRequest;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.update.UpdateContactAPIRequest;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.update.UpdateNaturalPersonAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.presenters.NaturalPersonPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,13 +32,16 @@ public class NaturalPersonController implements NaturalPersonAPI {
 
   private final CreateNaturalPersonUseCase createNaturalPersonUseCase;
   private final GetNaturalPersonUseCase getNaturalPersonUseCase;
+  private final UpdateNaturalPersonUseCase updateNaturalPersonUseCase;
 
   public NaturalPersonController(
     final CreateNaturalPersonUseCase useCase,
-    final GetNaturalPersonUseCase getNaturalPersonUseCase
+    final GetNaturalPersonUseCase getNaturalPersonUseCase,
+    final UpdateNaturalPersonUseCase updateNaturalPersonUseCase
   ) {
     this.createNaturalPersonUseCase = Objects.requireNonNull(useCase);
     this.getNaturalPersonUseCase = Objects.requireNonNull(getNaturalPersonUseCase);
+    this.updateNaturalPersonUseCase = Objects.requireNonNull(updateNaturalPersonUseCase);
   }
 
   @Override
@@ -69,5 +80,31 @@ public class NaturalPersonController implements NaturalPersonAPI {
 //    return NaturalPersonPresenter.present
 //      .compose(this.getNaturalPersonUseCase::execute)
 //      .apply(id);
+  }
+
+  @Override
+  public ResponseEntity<?> updateById(String id, UpdateNaturalPersonAPIRequest anInput) {
+    UpdateContactAPIRequest contactRequest = anInput.contact();
+    List<UpdateAddressCommand> updateAddressCommands =
+      contactRequest.addresses().stream().map(UpdateAddressAPIRequest::toCommand).toList();
+
+    UpdateContactCommand contactCommand =
+      UpdateContactCommand.with(contactRequest.id(), contactRequest.email(), contactRequest.phoneNumber(), updateAddressCommands, id);
+
+    final var aCommand = UpdateNaturalPersonCommand.with(
+      id,
+      anInput.name(),
+      anInput.cpf(),
+      contactCommand
+    );
+    final Function<ValidationHandler, ResponseEntity<?>> onError = ValidationHandler ->
+      ResponseEntity.unprocessableEntity().body(ValidationHandler);
+
+    final Function<Void, ResponseEntity<?>> onSuccess = Void -> {
+      return ResponseEntity.noContent().build();
+    };
+
+    return this.updateNaturalPersonUseCase.execute(aCommand)
+      .fold(onError, onSuccess);
   }
 }
