@@ -54,6 +54,7 @@ public class DeleteNaturalPersonUseCaseTest {
     aNaturalPerson.getContact().delete();
     aNaturalPerson.getContact().getAddresses().forEach(Address::delete);
     Mockito.verify(personGateway, times(1)).update(eq(aNaturalPerson));
-
   }
 }
+
+// TODO: Assert it does throws Exception if there is not found entity by Id
