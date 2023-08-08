@@ -71,7 +71,7 @@ public class UpdateNaturalPersonUseCaseTest {
       UpdateContactCommand.with(aContactId, aPhoneNumber, anEmail, anAddresses, expectedId.getValue());
 
     final var aCommand = UpdateNaturalPersonCommand
-        .with(expectedId.getValue(), expectedName, actualPerson.getCpf().getValue(),null,  actualPerson.getId().getValue());
+        .with(expectedId.getValue(), expectedName, actualPerson.getCpf().getValue(), aContactCmd);
 
     final NaturalPersonGateway personGateway = Mockito.mock(NaturalPersonGateway.class);
     Mockito.when(personGateway.findById(eq(expectedId)))
@@ -144,7 +144,7 @@ public class UpdateNaturalPersonUseCaseTest {
 
     final String expectedName = null;
     final var aCommand = UpdateNaturalPersonCommand
-      .with(aPersonId.getValue(), expectedName, actualPerson.getCpf().getValue(),null,  actualPerson.getId().getValue());
+      .with(aPersonId.getValue(), expectedName, actualPerson.getCpf().getValue(),aContactCmd);
 
     final NaturalPersonGateway personGateway = Mockito.mock(NaturalPersonGateway.class);
     Mockito.when(personGateway.findById(eq(aPersonId)))

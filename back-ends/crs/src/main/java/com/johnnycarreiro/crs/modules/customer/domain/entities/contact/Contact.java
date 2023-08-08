@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -149,7 +150,7 @@ public class Contact extends Entity<EntityId> {
   ) {
     this.phoneNumber = aPhoneNumber.replaceAll("[\\D.]", "");
     this.email = anEmail;
-    this.addresses= anAddresses;
+    updateAddresses(anAddresses);
     this.customerId = aCustomerId;
     this.setUpdatedAt(Instant.now());
     return this;
@@ -171,6 +172,28 @@ public class Contact extends Entity<EntityId> {
     this.customerId = aCustomerId;
     this.setUpdatedAt(Instant.now());
     return this;
+  }
+
+  public Contact update(final Contact aContact) {
+    this.phoneNumber = aContact.getPhoneNumber().replaceAll("[\\D.]", "");
+    this.email = aContact.getEmail();
+    updateAddresses(aContact.getAddresses());
+    this.customerId = aContact.getCustomerId();
+    this.setUpdatedAt(Instant.now());
+    return this;
+  }
+
+  private void updateAddresses(final List<Address> addresses) {
+    addresses.forEach(updatedAddr -> {
+      Optional<Address> existingAddress = this.addresses.stream().filter(currentAddr ->
+        currentAddr.getId().getValue().equals(updatedAddr.getId().getValue())
+      ).findFirst();
+
+      if (existingAddress.isEmpty()) {
+        this.addresses.add(updatedAddr);
+      }
+      existingAddress.ifPresent(addr -> addr.update(updatedAddr));
+    });
   }
 
   public Contact addAddress(List<Address> addresses) {

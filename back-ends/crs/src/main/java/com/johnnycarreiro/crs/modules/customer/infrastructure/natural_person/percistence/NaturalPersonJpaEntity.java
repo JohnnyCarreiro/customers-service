@@ -27,7 +27,7 @@ public class NaturalPersonJpaEntity {
   @Column(name = "CPF", nullable = false)
   private String cpf;
 
-  @OneToOne()
+  @OneToOne(fetch = FetchType.EAGER)
   @JoinTable(name = "NaturalPersonContact",
     joinColumns =
       { @JoinColumn(name = "CustomerId", referencedColumnName = "Id") },

@@ -28,7 +28,7 @@ public class ContactJpaEntity {
   @Column(name = "Email", nullable = false)
   private String email;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "ContactAddress",
     joinColumns = @JoinColumn(name = "ContactId", referencedColumnName = "Id"),
     inverseJoinColumns = @JoinColumn(name = "AddressId",
