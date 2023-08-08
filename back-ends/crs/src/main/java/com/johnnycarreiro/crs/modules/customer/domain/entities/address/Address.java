@@ -131,6 +131,19 @@ public class Address extends Entity<EntityId> {
     return this;
   }
 
+  public Address update(final Address anAddress ) {
+    this.street = anAddress.getStreet();
+    this.number = anAddress.getNumber();
+    this.complement = anAddress.getComplement();
+    this.area = anAddress.getArea();
+    this.city = anAddress.getCity();
+    this.state = anAddress.getState();
+    this.cep = anAddress.getCep();
+    this.unitType = anAddress.getUnitType();
+    this.customerId = anAddress.getCustomerId();
+    setUpdatedAt(Instant.now());
+    return this;
+  }
   public Address delete() {
     this.setDeletedAt(Instant.now());
     this.setUpdatedAt(Instant.now());

@@ -1,5 +1,6 @@
-package com.johnnycarreiro.crs.modules.customer.integration.application;
+package com.johnnycarreiro.crs.modules.customer.integration.application.natural_person;
 
+import com.johnnycarreiro.crs.core.domain.exceptions.DomainException;
 import com.johnnycarreiro.crs.modules.customer.IntegrationTest;
 import com.johnnycarreiro.crs.core.domain.validation.StackValidationHandler;
 import com.johnnycarreiro.crs.modules.customer.application.address.CreateAddressCommand;
@@ -57,6 +58,43 @@ public class CreateNaturalPersonUseCaseIT {
     Assertions.assertEquals(1, personRepository.count());
     Assertions.assertNull(sut.get());
   }
-}
 
-// TODO: Implemente simple test for: Delete, List, Get, and Update Use Cases;
+  @Test()
+  @DisplayName("Invalid Name - Throws DomainException")
+  public void givenInvalidName_whenCallExecute_thenThrowADomainException() {
+    final var expectedErrorCount = 1;
+    final var expectedErrorMessage = "`Name` shouldn't be null";
+
+    final String aName = null;
+    final var cpf = "935.411.347-80";
+
+    final var aStreet = "Logradouro";
+    final var aNumber = 100;
+    final String aComplement = null;
+    final var anArea = "Bairro";
+    final var aCity = "Mogi Guaçu";
+    final var aCep = "00100-000";
+    final var anState = "SP";
+    final var anUnitType = "Residential";
+
+    final var anEmail = "john.doe@acme.com";
+    final var aPhoneNumber = "(12) 99720-4431";
+
+    final var anAddressCmd =
+      CreateAddressCommand.with(aStreet, aNumber, aComplement, anArea, aCity, anState, aCep, anUnitType);
+
+    final var anContactCmd =
+      CreateContactCommand.with(anEmail, aPhoneNumber, List.of(anAddressCmd));
+
+    final var aCommand =
+      CreateNaturalPersonCommand.with(aName, cpf, anContactCmd);
+
+    Assertions.assertEquals(0, personRepository.count());
+
+    StackValidationHandler sut = useCase.execute(aCommand).getLeft();
+
+    Assertions.assertEquals(0, personRepository.count());
+    Assertions.assertEquals(expectedErrorCount, sut.getErrors().size());
+    Assertions.assertEquals(expectedErrorMessage, sut.getErrors().get(0).message());
+  }
+}

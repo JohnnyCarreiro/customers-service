@@ -6,16 +6,14 @@ public record UpdateNaturalPersonCommand(
     String id,
     String name,
     String cpf,
-    UpdateContactCommand contact,
-    String customerId
+    UpdateContactCommand contact
 ) {
   public static UpdateNaturalPersonCommand with(
       final String anId,
       final String aName,
       final String aCpf,
-      final UpdateContactCommand aContact,
-      final String aCustomerId
+      final UpdateContactCommand aContact
   ) {
-    return new UpdateNaturalPersonCommand(anId, aName, aCpf, aContact, aCustomerId);
+    return new UpdateNaturalPersonCommand(anId, aName, aCpf, aContact);
   }
 }

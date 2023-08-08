@@ -107,7 +107,7 @@ public class NaturalPerson extends AggregateRoot<EntityId> {
   public NaturalPerson update(final String aName, final String aCpf, final Contact aContact) {
     this.name = aName;
     this.cpf = Cpf.create(aCpf);
-    this.contact = aContact;
+    this.contact.update(aContact);
     setUpdatedAt(Instant.now());
     return this;
   }
