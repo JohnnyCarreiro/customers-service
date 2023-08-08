@@ -1,13 +1,8 @@
 package com.johnnycarreiro.crs.modules.customer.integration.application.natural_person;
 
-import com.johnnycarreiro.crs.core.domain.EntityId;
-import com.johnnycarreiro.crs.core.domain.exceptions.DomainException;
-import com.johnnycarreiro.crs.core.domain.exceptions.NotFoundException;
 import com.johnnycarreiro.crs.modules.customer.IntegrationTest;
 import com.johnnycarreiro.crs.modules.customer.application.address.UpdateAddressCommand;
 import com.johnnycarreiro.crs.modules.customer.application.contact.UpdateContactCommand;
-import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonOutput;
-import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.list.ListNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.list.NaturalPersonListOutput;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.address.Address;
