@@ -33,13 +33,12 @@ public class AddressValidator extends Validator {
   }
 
   private void validateComplement(String value) {
-    if(isNull(value)) return;
-    var length = value.trim().length();
-    if(isBlank(value)) {
+    if(isNull(value)) {
       this.validationHandler().append(new Error("`Complement` is Invalid"));
       return;
     }
-    if (length < 1 || length > 255) this.validationHandler()
+    var length = value.trim().length();
+    if (length > 0 && length < 1 || length > 255) this.validationHandler()
         .append(new Error("`Complement` must have at least one and less than 255 characters"));
   }
 

@@ -44,7 +44,7 @@ public class AddressMSSQLGatewayTest {
   public void givenValidUpdatedName_whenCallUpdate_thenUpdateRecord() {
     final var aStreet = "Logradouro 1";
     final var aNumber = 100;
-    final String aComplement = null;
+    final var aComplement = "";
     final var anArea = "Bairro 1";
     final var aCity = "Mogi Guaçu 1";
     final var aCep = "00100-000";
@@ -91,7 +91,7 @@ public class AddressMSSQLGatewayTest {
   public void givenValidId_whenCallFindById_thenReturnsARecord() {
     final var aStreet = "Logradouro 1";
     final var aNumber = 100;
-    final String aComplement = null;
+    final var aComplement = "";
     final var anArea = "Bairro 1";
     final var aCity = "Mogi Guaçu 1";
     final var aCep = "00100-000";
@@ -123,7 +123,7 @@ public class AddressMSSQLGatewayTest {
   public void whenCallFindAll_thenReturnsRecords() {
     final var aStreet = "Logradouro 1";
     final var aNumber = 100;
-    final String aComplement = null;
+    final var aComplement = "";
     final var anArea = "Bairro 1";
     final var aCity = "Mogi Guaçu 1";
     final var aCep = "00100-000";

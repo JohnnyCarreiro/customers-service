@@ -41,7 +41,7 @@ public class UpdateNaturalPersonUseCaseTest {
     final var anAddressId = "811f4d7b-ab17-4d7a-8911-295dd09276c4";
     final var aStreet = "Logradouro";
     final var aNumber = 100;
-    final String aComplement = null;
+    final String aComplement = "";
     final var anArea = "Bairro";
     final var aCity = "Mogi Guaçu";
     final var anState = "SP";
@@ -113,7 +113,7 @@ public class UpdateNaturalPersonUseCaseTest {
     final var anAddressId = "811f4d7b-ab17-4d7a-8911-295dd09276c4";
     final var aStreet = "Logradouro";
     final var aNumber = 100;
-    final String aComplement = null;
+    final String aComplement = "";
     final var anArea = "Bairro";
     final var aCity = "Mogi Guaçu";
     final var anState = "SP";

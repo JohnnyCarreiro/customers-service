@@ -24,15 +24,4 @@ public record CreateAddressCommand(
   ) {
     return new CreateAddressCommand(aStreet, aNumber, aComplement, anArea, aCity, aState, aCep, anUnitType);
   }
-
-  public static CreateAddressCommand with(CreateAddressAPIRequest addr) {
-    return new CreateAddressCommand(addr.street(),
-      addr.number(),
-      addr.complement(),
-      addr.area(),
-      addr.city(),
-      addr.state(),
-      addr.cep(),
-      addr.unitType());
-  }
 }

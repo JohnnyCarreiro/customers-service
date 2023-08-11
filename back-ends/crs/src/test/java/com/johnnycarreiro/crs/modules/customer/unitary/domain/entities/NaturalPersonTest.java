@@ -184,7 +184,7 @@ public class NaturalPersonTest {
   @Test
   @DisplayName("Invalid Address - Throws an Exception")
   public void givenInvalidValidAddressParam_whenCallValidateANewNaturalPerson_thenThrowsNewDomainException() {
-    final var expectedAddressNumber = 8;
+    final var expectedAddressNumber = 9;
 
     final var name = "John Doe";
     final var cpf = "935.411.347-80";

@@ -52,7 +52,7 @@ public class ContactMSSQLGatewayTest {
 
     final var aStreet = "Logradouro 1";
     final var aNumber = 100;
-    final String aComplement = null;
+    final var aComplement = "";
     final var anArea = "Bairro 1";
     final var aCity = "Mogi Guaçu 1";
     final var aCep = "00100-000";

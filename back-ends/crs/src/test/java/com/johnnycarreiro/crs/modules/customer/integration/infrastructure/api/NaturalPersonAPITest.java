@@ -266,7 +266,7 @@ public class NaturalPersonAPITest {
   private static CreateNaturalPersonAPIRequest getCreateNaturalPersonAPIRequest(String expectedName, String expectedCpf) {
     final var aStreet = "Logradouro 1";
     final var aNumber = 100;
-    final String aComplement = null;
+    final var aComplement = "";
     final var anArea = "Bairro 1";
     final var aCity = "Mogi Guaçu 1";
     final var aCep = "00100-000";
@@ -294,7 +294,7 @@ public class NaturalPersonAPITest {
     final var customerId = UUID.randomUUID().toString();
     final var aStreet = "Logradouro 1";
     final var aNumber = 100;
-    final String aComplement = null;
+    final var aComplement = "";
     final var anArea = "Bairro 1";
     final var aCity = "Mogi Guaçu 1";
     final var aCep = "00100-000";
@@ -319,7 +319,6 @@ public class NaturalPersonAPITest {
 
     return new UpdateNaturalPersonAPIRequest(expectedName, expectedCpf, contactAPIRequest);
   }
-
 }
 /*
  * TODO: Rotes for:

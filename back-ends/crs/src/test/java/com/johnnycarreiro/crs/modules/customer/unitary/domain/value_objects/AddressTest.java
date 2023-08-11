@@ -21,7 +21,7 @@ public class AddressTest {
     final var expectedCustomerId = "cc4eb100-7b02-482f-96ed-c48241648b5d";
     final var expectedStreet = "Logradouro";
     final var expectedNumber = 100;
-    final String expectedComplement = null;
+    final var expectedComplement = "";
     final var expectedArea = "Bairro";
     final var expectedCity = "Mogi Guaçu";
     final var expectedState = State.SAO_PAULO;
@@ -64,6 +64,7 @@ public class AddressTest {
     final var aCustomerId = "cc4eb100-7b02-482f-96ed-c48241648b5d";
     final var aStreet = "Logradouro";
     final var aNumber = 100;
+    final var aComplement = "";
     final var anArea = "Bairro";
     final var aCity = "Mogi Guaçu";
     final var expectedCep = "00100-000";
@@ -71,7 +72,7 @@ public class AddressTest {
     final var anUnitType = "Residential";
 
     final var currentAddress = Address
-        .create(aStreet, aNumber, null, anArea, aCity,  anState, expectedCep, anUnitType, aCustomerId);
+        .create(aStreet, aNumber, aComplement, anArea, aCity,  anState, expectedCep, anUnitType, aCustomerId);
 
     final var sut = StackValidationHandler.create();
     currentAddress.validate(sut);
@@ -188,13 +189,14 @@ public class AddressTest {
   }
 
   @Test
-  @DisplayName("Null Street - Throws an Exception")
+  @DisplayName("Null City - Throws an Exception")
   public void givenAnInvalidNullAddressCity_whenCallNewAddressValidate_thenItShouldThrowsAnException() {
     final var expectedErrorCount = 1;
     final var expectedErrorMessage = "`City` shouldn't be Null";
     final var  aStreet = "Logradouro";
     final var aCustomerId = "cc4eb100-7b02-482f-96ed-c48241648b5d";
     final var aNumber = 100;
+    final var aComplement = "";
     final var anArea = "Bairro";
     final String aCity = null;
     final var expectedCep = "00100-000";
@@ -202,7 +204,7 @@ public class AddressTest {
     final var anUnitType = "Residential";
 
     final var currentAddress = Address
-      .create(aStreet, aNumber, null, anArea, aCity,  anState, expectedCep, anUnitType, aCustomerId);
+      .create(aStreet, aNumber, aComplement, anArea, aCity,  anState, expectedCep, anUnitType, aCustomerId);
 
     final var sut = Assertions.assertThrows(
       DomainException.class,() ->  currentAddress.validate(new ThrowsValidationHandler())
@@ -213,11 +215,11 @@ public class AddressTest {
   }
 
   @Test
-  @DisplayName("Empty Complement - Throws an Exception")
+  @DisplayName("Null Complement - Throws an Exception")
   public void givenAnInvalidEmptyAddressComplement_whenCallNewAddressValidate_thenItShouldThrowsAnException() {
     final var expectedErrorCount = 1;
     final var expectedErrorMessage = "`Complement` is Invalid";
-    final String aComplement = "  ";
+    final String aComplement = null;
     final var aCustomerId = "cc4eb100-7b02-482f-96ed-c48241648b5d";
     final var aStreet = "Logradouro";
     final var aNumber = 100;
@@ -277,7 +279,7 @@ public class AddressTest {
     final String aCustomerId = null;
     final String aStreet = null;
     final Integer aNumber = null;
-    final String aComplement = "  ";
+    final String aComplement = null;
     final String anArea = null;
     final String aCity = null;
     final String expectedCep = null;
@@ -318,7 +320,7 @@ public class AddressTest {
   public void whenCallUpdateAddressValidate_thenItShouldSetDeletionDate() {
     final var aStreet = "Logradouro 1";
     final var aNumber = 100;
-    final String aComplement = null;
+    final var aComplement = "";
     final var anArea = "Bairro 1";
     final var aCity = "Mogi Guaçu 1";
     final var aCep = "00100-000";

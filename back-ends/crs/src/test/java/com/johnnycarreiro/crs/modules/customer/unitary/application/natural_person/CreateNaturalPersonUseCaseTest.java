@@ -33,7 +33,7 @@ public class CreateNaturalPersonUseCaseTest {
 
     final var aStreet = "Logradouro";
     final var aNumber = 100;
-    final String aComplement = null;
+    final var aComplement = "";
     final var anArea = "Bairro";
     final var aCity = "Mogi Guaçu";
     final var aCep = "00100-000";
@@ -80,7 +80,7 @@ public class CreateNaturalPersonUseCaseTest {
 
     final var aStreet = "Logradouro";
     final var aNumber = 100;
-    final String aComplement = null;
+    final String aComplement = "";
     final var anArea = "Bairro";
     final var aCity = "Mogi Guaçu";
     final var aCep = "00100-000";
@@ -119,7 +119,7 @@ public class CreateNaturalPersonUseCaseTest {
 
     final var aStreet = "Logradouro";
     final var aNumber = 100;
-    final String aComplement = null;
+    final String aComplement = "";
     final var anArea = "Bairro";
     final var aCity = "Mogi Guaçu";
     final var aCep = "00100-000";

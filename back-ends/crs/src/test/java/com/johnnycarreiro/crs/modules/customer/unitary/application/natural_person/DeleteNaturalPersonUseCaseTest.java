@@ -28,7 +28,7 @@ public class DeleteNaturalPersonUseCaseTest {
 
     final var aStreet = "Logradouro";
     final var aNumber = 100;
-    final String aComplement = null;
+    final String aComplement = "";
     final var anArea = "Bairro";
     final var aCity = "Mogi Guaçu";
     final var anState = "SP";

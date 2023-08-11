@@ -9,6 +9,7 @@ import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrie
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonCommand;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.api.NaturalPersonAPI;
+import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateAddressAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateContactAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateNaturalPersonAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.create.CreateNaturalPersonCommand;
@@ -48,7 +49,7 @@ public class NaturalPersonController implements NaturalPersonAPI {
   public ResponseEntity<?> createNaturalPerson(final CreateNaturalPersonAPIRequest anInput) {
     final var contactRequest = anInput.contact();
     List<CreateAddressCommand> createAddressCommands =
-      contactRequest.addresses().stream().map(CreateAddressCommand::with).toList();
+      contactRequest.addresses().stream().map(CreateAddressAPIRequest::toCommand).toList();
     CreateContactCommand contactCommand =
       CreateContactCommand.with(contactRequest.email(), contactRequest.phoneNumber(), createAddressCommands);
     final var aCommand = CreateNaturalPersonCommand.with(
