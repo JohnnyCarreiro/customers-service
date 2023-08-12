@@ -39,4 +39,11 @@ public interface NaturalPersonAPI {
   ResponseEntity<?> updateById(
     @PathVariable(name = "id") final String id,
     @RequestBody final UpdateNaturalPersonAPIRequest anInput);
+
+  @DeleteMapping(
+    value = "{id}",
+    consumes = MediaType.APPLICATION_JSON_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  ResponseEntity<Object> deleteById(@PathVariable(name = "id") final String id);
 }

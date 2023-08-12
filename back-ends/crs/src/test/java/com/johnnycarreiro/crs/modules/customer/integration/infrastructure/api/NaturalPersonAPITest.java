@@ -7,6 +7,7 @@ import com.johnnycarreiro.crs.core.domain.exceptions.NotFoundException;
 import com.johnnycarreiro.crs.core.domain.validation.Error;
 import com.johnnycarreiro.crs.core.domain.validation.StackValidationHandler;
 import com.johnnycarreiro.crs.modules.customer.ControllerTest;
+import com.johnnycarreiro.crs.modules.customer.application.natural_person.delete.DeleteNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonOutput;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonUseCase;
@@ -55,6 +56,9 @@ public class NaturalPersonAPITest {
 
   @MockBean
   private UpdateNaturalPersonUseCase updateNaturalPersonUseCase;
+
+  @MockBean
+  private DeleteNaturalPersonUseCase deleteNaturalPersonUseCase;
 
   @Autowired
   private MockMvc mvc;
@@ -230,7 +234,7 @@ public class NaturalPersonAPITest {
   }
 
   @Test()
-  @DisplayName("Valid Command - Update new Natural Person")
+  @DisplayName("Valid Command - Update a Natural Person")
   public void givenValidCommand_whenCallExecute_thenUpdateANewNaturalPerson() throws Exception {
     final var expectedId = "a7b128d7-fa53-4e23-ac70-cff8fd7f9a60";
     final var expectedName = "John Doe";
@@ -261,6 +265,70 @@ public class NaturalPersonAPITest {
         && Objects.equals(1, cmd.contact().addresses().size())
       ));
     //TODO: Verify Contact and Addresses
+  }
+
+  @Test()
+  @DisplayName("Delete Valid Id - Delete a Natural Person")
+  public void givenAValidID_whenCallExecute_thenDeleteANewNaturalPerson() throws Exception {
+    final var aName = "John Doe";
+    final var aCpf = "935.411.347-80";
+    NaturalPerson aNaturalPerson = NaturalPerson.create(aName, aCpf);
+    final var expectedId = aNaturalPerson.getId().getValue();
+
+    Address anAddress = Address.create(
+      "logradouro",
+      100,
+      null,
+      "Bairro",
+      "Mogi-guaçu",
+      "sp",
+      "00100-000",
+      "Commercial",
+      expectedId
+    );
+    Contact aContact = Contact.create(
+      "(12) 99720-4431",
+      "john.doe@acme.com",
+      anAddress,
+      EntityId.from(expectedId)
+    );
+    aNaturalPerson.addContact(aContact);
+
+    doNothing()
+      .when(deleteNaturalPersonUseCase).execute(any());
+
+    final var aRequest = delete("/natural_persons/{id}", expectedId)
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON);
+
+    final var response = this.mvc.perform(aRequest)
+      .andDo(print());
+
+    response.andExpect(status().isNoContent());
+
+    verify(deleteNaturalPersonUseCase, times(1)).execute(eq(expectedId));
+  }
+
+  @Test
+  @DisplayName("Delete Invalid Id - Returns Not Found Exc.")
+  public void givenInvalidID_whenCallsDeleteNaturalPerson_thenItShouldReturnsNotFound() throws Exception {
+    final var expectedMessage = "NaturalPerson with ID a7b128d7-fa53-4e23-ac70-cff8fd7f9a60 was not found";
+    final var expectedId = EntityId.from("a7b128d7-fa53-4e23-ac70-cff8fd7f9a60");
+
+    final var aRequest = delete("/natural_persons/{id}", expectedId.getValue())
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON);
+
+    doThrow(NotFoundException.with(
+      NaturalPerson.class, expectedId
+    ))
+      .when(deleteNaturalPersonUseCase).execute(any());
+
+    final var response = this.mvc.perform(aRequest)
+      .andDo(print());
+
+    response.andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.message", equalTo(expectedMessage)));
   }
 
   private static CreateNaturalPersonAPIRequest getCreateNaturalPersonAPIRequest(String expectedName, String expectedCpf) {
@@ -326,6 +394,6 @@ public class NaturalPersonAPITest {
  *  [x] Get By Id;
  *  [x] Update;
  *  [] Update - ex;
- *  [] Delete;
+ *  [x] Delete;
  *  [] List;
  * */

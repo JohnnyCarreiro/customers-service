@@ -5,12 +5,12 @@ import com.johnnycarreiro.crs.modules.customer.application.address.CreateAddress
 import com.johnnycarreiro.crs.modules.customer.application.address.UpdateAddressCommand;
 import com.johnnycarreiro.crs.modules.customer.application.contact.CreateContactCommand;
 import com.johnnycarreiro.crs.modules.customer.application.contact.UpdateContactCommand;
+import com.johnnycarreiro.crs.modules.customer.application.natural_person.delete.DeleteNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonCommand;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.api.NaturalPersonAPI;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateAddressAPIRequest;
-import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateContactAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateNaturalPersonAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.create.CreateNaturalPersonCommand;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.create.CreateNaturalPersonUseCase;
@@ -34,15 +34,18 @@ public class NaturalPersonController implements NaturalPersonAPI {
   private final CreateNaturalPersonUseCase createNaturalPersonUseCase;
   private final GetNaturalPersonUseCase getNaturalPersonUseCase;
   private final UpdateNaturalPersonUseCase updateNaturalPersonUseCase;
+  private final DeleteNaturalPersonUseCase deleteNaturalPersonUseCase;
 
   public NaturalPersonController(
     final CreateNaturalPersonUseCase useCase,
     final GetNaturalPersonUseCase getNaturalPersonUseCase,
-    final UpdateNaturalPersonUseCase updateNaturalPersonUseCase
+    final UpdateNaturalPersonUseCase updateNaturalPersonUseCase,
+    final DeleteNaturalPersonUseCase deleteNaturalPersonUseCase
   ) {
     this.createNaturalPersonUseCase = Objects.requireNonNull(useCase);
     this.getNaturalPersonUseCase = Objects.requireNonNull(getNaturalPersonUseCase);
     this.updateNaturalPersonUseCase = Objects.requireNonNull(updateNaturalPersonUseCase);
+    this.deleteNaturalPersonUseCase =  Objects.requireNonNull(deleteNaturalPersonUseCase);
   }
 
   @Override
@@ -107,5 +110,11 @@ public class NaturalPersonController implements NaturalPersonAPI {
 
     return this.updateNaturalPersonUseCase.execute(aCommand)
       .fold(onError, onSuccess);
+  }
+
+  @Override
+  public ResponseEntity<Object> deleteById(final String id) {
+    this.deleteNaturalPersonUseCase.execute(id);
+    return ResponseEntity.noContent().build();
   }
 }
