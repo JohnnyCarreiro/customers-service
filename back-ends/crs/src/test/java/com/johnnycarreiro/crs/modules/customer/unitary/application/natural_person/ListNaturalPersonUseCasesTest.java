@@ -1,7 +1,10 @@
 package com.johnnycarreiro.crs.modules.customer.unitary.application.natural_person;
 
+import com.johnnycarreiro.crs.core.domain.EntityId;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.list.DefaultListNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.list.NaturalPersonListOutput;
+import com.johnnycarreiro.crs.modules.customer.domain.entities.address.Address;
+import com.johnnycarreiro.crs.modules.customer.domain.entities.contact.Contact;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.natural_person.NaturalPerson;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.natural_person.NaturalPersonGateway;
 import com.johnnycarreiro.crs.modules.customer.domain.pagination.Pagination;
@@ -33,7 +36,7 @@ public class ListNaturalPersonUseCasesTest extends UseCaseTest {
   @Test
   @DisplayName("Valid Query - Returns Natural Person Output")
   public void givenValidQuery_whenCallListNaturalPerson_thenReturnsNaturalPersonList() {
-    List<NaturalPerson> naturalPeople = List.of(NaturalPerson.create("John Doe", "935.411.347-80"));
+    List<NaturalPerson> naturalPersons = List.of(getNewCompleteNaturalPerson());
 
     final var expectedPage = 0;
     final var expectedPerPage = 10;
@@ -44,7 +47,7 @@ public class ListNaturalPersonUseCasesTest extends UseCaseTest {
     final var aQuery =
         SearchQuery.from(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
     final var expectedPagination =
-        new Pagination<>(expectedPage, expectedPerPage, naturalPeople.size(), naturalPeople);
+        new Pagination<>(expectedPage, expectedPerPage, naturalPersons.size(), naturalPersons);
 
     final var expectedItemsCount = 1;
     final var expectedResult = expectedPagination.map(NaturalPersonListOutput::from);
@@ -57,13 +60,13 @@ public class ListNaturalPersonUseCasesTest extends UseCaseTest {
     Assertions.assertEquals(expectedResult, sut);
     Assertions.assertEquals(expectedPage, sut.currentPage());
     Assertions.assertEquals(expectedPerPage, sut.perPage());
-    Assertions.assertEquals(naturalPeople.size(), sut.total());
+    Assertions.assertEquals(naturalPersons.size(), sut.total());
   }
 
   @Test
   @DisplayName("Empty Query - Returns Natural Person Output")
   public void givenEmptyQuery_whenCallListNaturalPerson_thenReturnsNaturalPersonList() {
-    List<NaturalPerson> naturalPeople = List.of(NaturalPerson.create("John Doe", "935.411.347-80"));
+    List<NaturalPerson> naturalPersons = List.of(getNewCompleteNaturalPerson());
 
     final var expectedPage = 0;
     final var expectedPerPage = 10;
@@ -74,7 +77,7 @@ public class ListNaturalPersonUseCasesTest extends UseCaseTest {
     final var aQuery =
         SearchQuery.from(null, null, null, null, null);
     final var expectedPagination =
-        new Pagination<>(expectedPage, expectedPerPage, naturalPeople.size(), naturalPeople);
+        new Pagination<>(expectedPage, expectedPerPage, naturalPersons.size(), naturalPersons);
 
     final var expectedItemsCount = 1;
     final var expectedResult = expectedPagination.map(NaturalPersonListOutput::from);
@@ -91,6 +94,32 @@ public class ListNaturalPersonUseCasesTest extends UseCaseTest {
     Assertions.assertEquals(expectedResult, sut);
     Assertions.assertEquals(expectedPage, sut.currentPage());
     Assertions.assertEquals(expectedPerPage, sut.perPage());
-    Assertions.assertEquals(naturalPeople.size(), sut.total());
+    Assertions.assertEquals(naturalPersons.size(), sut.total());
+  }
+
+  private static NaturalPerson getNewCompleteNaturalPerson() {
+    final var aName = "John Doe";
+    final var aCpf = "935.411.347-80";
+    NaturalPerson aNaturalPerson = NaturalPerson.create(aName, aCpf);
+    final var expectedId = aNaturalPerson.getId().getValue();
+
+    Address anAddress = Address.create(
+      "logradouro",
+      100,
+      null,
+      "Bairro",
+      "Mogi-guaçu",
+      "sp",
+      "00100-000",
+      "Commercial",
+      expectedId
+    );
+    Contact aContact = Contact.create(
+      "(12) 99720-4431",
+      "john.doe@acme.com",
+      anAddress,
+      EntityId.from(expectedId)
+    );
+    return aNaturalPerson.addContact(aContact);
   }
 }
