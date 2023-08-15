@@ -93,8 +93,9 @@ public class NaturalPerson extends AggregateRoot<EntityId> {
     return new NaturalPerson(aPerson);
   }
 
-  public void addContact(Contact aContact) {
+  public NaturalPerson addContact(Contact aContact) {
     this.contact = aContact;
+    return this;
   }
 
   public NaturalPerson update(String name, String cpf) {

@@ -7,8 +7,10 @@ import com.johnnycarreiro.crs.modules.customer.application.contact.CreateContact
 import com.johnnycarreiro.crs.modules.customer.application.contact.UpdateContactCommand;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.delete.DeleteNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonUseCase;
+import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.list.ListNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonCommand;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonUseCase;
+import com.johnnycarreiro.crs.modules.customer.domain.pagination.SearchQuery;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.api.NaturalPersonAPI;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateAddressAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateNaturalPersonAPIRequest;
@@ -35,17 +37,20 @@ public class NaturalPersonController implements NaturalPersonAPI {
   private final GetNaturalPersonUseCase getNaturalPersonUseCase;
   private final UpdateNaturalPersonUseCase updateNaturalPersonUseCase;
   private final DeleteNaturalPersonUseCase deleteNaturalPersonUseCase;
+  private final ListNaturalPersonUseCase listNaturalPersonUseCase;
 
   public NaturalPersonController(
     final CreateNaturalPersonUseCase useCase,
     final GetNaturalPersonUseCase getNaturalPersonUseCase,
     final UpdateNaturalPersonUseCase updateNaturalPersonUseCase,
-    final DeleteNaturalPersonUseCase deleteNaturalPersonUseCase
-  ) {
+    final DeleteNaturalPersonUseCase deleteNaturalPersonUseCase,
+    final ListNaturalPersonUseCase listNaturalPersonUseCase
+    ) {
     this.createNaturalPersonUseCase = Objects.requireNonNull(useCase);
     this.getNaturalPersonUseCase = Objects.requireNonNull(getNaturalPersonUseCase);
     this.updateNaturalPersonUseCase = Objects.requireNonNull(updateNaturalPersonUseCase);
     this.deleteNaturalPersonUseCase =  Objects.requireNonNull(deleteNaturalPersonUseCase);
+    this.listNaturalPersonUseCase = Objects.requireNonNull((listNaturalPersonUseCase));
   }
 
   @Override
@@ -74,8 +79,16 @@ public class NaturalPersonController implements NaturalPersonAPI {
   }
 
   @Override
-  public Pagination<?> listNaturalPerson(String search, Integer page, Integer perPage, String sort, String direction) {
-    return null;
+  public Pagination<?> listNaturalPerson(
+    final String search,
+    final Integer page,
+    final Integer perPage,
+    final String sort,
+    final String direction
+  ) {
+    return listNaturalPersonUseCase
+      .execute(new SearchQuery(page, perPage, search, sort, direction))
+      .map(NaturalPersonPresenter::present);
   }
 
   @Override

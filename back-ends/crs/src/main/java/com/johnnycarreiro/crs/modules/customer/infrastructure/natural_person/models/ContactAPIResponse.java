@@ -7,7 +7,7 @@ import java.util.List;
 
 public record ContactAPIResponse(
   @JsonProperty("id") String id,
-  @JsonProperty("phoneNumber") String phoneNumber,
+  @JsonProperty("phone_number") String phoneNumber,
   @JsonProperty("email") String email,
   @JsonProperty("addresses") List<AddressAPIResponse> addresses,
   @JsonProperty("customer_id") String customerId,

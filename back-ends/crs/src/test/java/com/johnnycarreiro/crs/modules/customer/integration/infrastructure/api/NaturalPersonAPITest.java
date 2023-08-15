@@ -10,10 +10,14 @@ import com.johnnycarreiro.crs.modules.customer.ControllerTest;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.delete.DeleteNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonOutput;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.get.GetNaturalPersonUseCase;
+import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.list.ListNaturalPersonUseCase;
+import com.johnnycarreiro.crs.modules.customer.application.natural_person.retrieve.list.NaturalPersonListOutput;
 import com.johnnycarreiro.crs.modules.customer.application.natural_person.update.UpdateNaturalPersonUseCase;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.address.Address;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.contact.Contact;
 import com.johnnycarreiro.crs.modules.customer.domain.entities.natural_person.NaturalPerson;
+import com.johnnycarreiro.crs.modules.customer.domain.pagination.Pagination;
+import com.johnnycarreiro.crs.modules.customer.domain.pagination.SearchQuery;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.api.NaturalPersonAPI;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateAddressAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.create.CreateContactAPIRequest;
@@ -22,6 +26,7 @@ import com.johnnycarreiro.crs.modules.customer.application.natural_person.create
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.update.UpdateAddressAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.update.UpdateContactAPIRequest;
 import com.johnnycarreiro.crs.modules.customer.infrastructure.natural_person.models.update.UpdateNaturalPersonAPIRequest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -59,6 +64,9 @@ public class NaturalPersonAPITest {
 
   @MockBean
   private DeleteNaturalPersonUseCase deleteNaturalPersonUseCase;
+
+  @MockBean
+  private ListNaturalPersonUseCase listNaturalPersonUseCase;
 
   @Autowired
   private MockMvc mvc;
@@ -331,6 +339,64 @@ public class NaturalPersonAPITest {
       .andExpect(jsonPath("$.message", equalTo(expectedMessage)));
   }
 
+  @Test
+  @DisplayName("Valid Query - Returns Natural Person Output")
+  public void givenValidQuery_whenCallListNaturalPerson_thenReturnsNaturalPersonList() throws Exception {
+    NaturalPerson aNaturalPerson = getNewCompleteNaturalPerson();
+    List<NaturalPerson> naturalPeople = List.of(aNaturalPerson);
+
+    final var expectedPage = 0;
+    final var expectedPerPage = 10;
+    final var expectedTerms = "";
+    final var expectedSort = "createdAt";
+    final var expectedDirection = "asc";
+    final var expectedItemsCount = 1;
+    final var expectedTotal = 1;
+
+    final var aQuery =
+      SearchQuery.from(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+    final var expectedPagination =
+      new Pagination<>(expectedPage, expectedPerPage, naturalPeople.size(), naturalPeople);
+    when(listNaturalPersonUseCase.execute(any()))
+      .thenReturn(expectedPagination.map(NaturalPersonListOutput::from));
+
+    final var aRequest = get("/natural_persons")
+      .queryParam("page", String.valueOf(expectedPage))
+      .queryParam("perPage", String.valueOf(expectedPerPage))
+      .queryParam("sort", expectedSort)
+      .queryParam("dir", expectedDirection)
+      .queryParam("search", expectedTerms)
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON);
+
+    final var response = this.mvc.perform(aRequest)
+      .andDo(print());
+
+    response.andExpect(status().isOk())
+      .andExpect(jsonPath("$.current_page", equalTo(expectedPage)))
+      .andExpect(jsonPath("$.per_page", equalTo(expectedPerPage)))
+      .andExpect(jsonPath("$.total", equalTo(expectedTotal)))
+      .andExpect(jsonPath("$.items", hasSize(expectedItemsCount)))
+      .andExpect(jsonPath("$.items[0].id", equalTo(aNaturalPerson.getId().getValue())))
+      .andExpect(jsonPath("$.items[0].name", equalTo(aNaturalPerson.getName())))
+      .andExpect(jsonPath("$.items[0].cpf", equalTo(aNaturalPerson.getCpf().getValue())))
+      .andExpect(jsonPath("$.items[0].created_at", equalTo(aNaturalPerson.getCreatedAt().toString())))
+      .andExpect(jsonPath("$.items[0].updated_at", equalTo(aNaturalPerson.getUpdatedAt().toString())))
+      .andExpect(jsonPath("$.items[0].deleted_at", equalTo(aNaturalPerson.getDeletedAt())))
+      .andExpect(jsonPath("$.items[0].contact.email", equalTo(aNaturalPerson.getContact().getEmail())))
+      .andExpect(jsonPath("$.items[0].contact.phone_number", equalTo(aNaturalPerson.getContact().getPhoneNumber())))
+      .andExpect(jsonPath("$.items[0].contact.addresses", hasSize(aNaturalPerson.getContact().getAddresses().size())));
+
+    verify(listNaturalPersonUseCase, times(1)).execute(argThat(query ->
+      Objects.equals(expectedPage, query.page())
+      &&  Objects.equals(expectedPerPage, query.perPage())
+      &&  Objects.equals(expectedTerms, query.terms())
+      &&  Objects.equals(expectedSort, query.sort())
+      &&  Objects.equals(expectedDirection, query.direction())
+    ));
+
+  }
+
   private static CreateNaturalPersonAPIRequest getCreateNaturalPersonAPIRequest(String expectedName, String expectedCpf) {
     final var aStreet = "Logradouro 1";
     final var aNumber = 100;
@@ -387,6 +453,32 @@ public class NaturalPersonAPITest {
 
     return new UpdateNaturalPersonAPIRequest(expectedName, expectedCpf, contactAPIRequest);
   }
+
+  private static NaturalPerson getNewCompleteNaturalPerson() {
+    final var aName = "John Doe";
+    final var aCpf = "935.411.347-80";
+    NaturalPerson aNaturalPerson = NaturalPerson.create(aName, aCpf);
+    final var expectedId = aNaturalPerson.getId().getValue();
+
+    Address anAddress = Address.create(
+      "logradouro",
+      100,
+      null,
+      "Bairro",
+      "Mogi-guaçu",
+      "sp",
+      "00100-000",
+      "Commercial",
+      expectedId
+    );
+    Contact aContact = Contact.create(
+      "(12) 99720-4431",
+      "john.doe@acme.com",
+      anAddress,
+      EntityId.from(expectedId)
+    );
+    return aNaturalPerson.addContact(aContact);
+  }
 }
 /*
  * TODO: Rotes for:
@@ -395,5 +487,5 @@ public class NaturalPersonAPITest {
  *  [x] Update;
  *  [] Update - ex;
  *  [x] Delete;
- *  [] List;
+ *  [x] List;
  * */
